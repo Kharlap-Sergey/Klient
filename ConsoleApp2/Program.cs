@@ -6,23 +6,31 @@ using System.Collections.Generic;
 
 namespace ConsoleApp1
 {
+ 
     public class OP
     {
         static string ClientConect = "http://localhost:50357/";
-        public static string Crawl(string uri, int amointPages)
+        public static void Crawl(string uri, int amountPages)
         {
             var client = new JsonServiceClient(ClientConect);
+            client.SendAsync(new CravlByUri { Uri = uri, DeapValue = amountPages });
 
-            var crawlResponse = client.Send(new CravlByUri { Uri = uri, DeapValue = amointPages});
+            while (!client.Send(new IsCrawlCompleted {PagesAmount = amountPages}))
+            {
+                System.Threading.Thread.Sleep(5000);
+            }
             //client.SendOneWay(new CravlByUri { Uri = uri, DeapValue = 100});
-            return crawlResponse.Result;
         }
 
         public static void ExtractEntities()
         {
             var client = new JsonServiceClient(ClientConect);
 
-            var Response = client.Send(new ExtractEntities { });
+            client.SendAsync(new ExtractEntities { });
+            while (!client.Send(new IsExtractEntitiesCompleted {}))
+            {
+                System.Threading.Thread.Sleep(5000);
+            }
         }
 
         public static List<string> FindByWord(string word)
@@ -43,6 +51,15 @@ namespace ConsoleApp1
             var client = new JsonServiceClient(ClientConect);
             var Response = client.Send(new DeleteAllTable {});
         }
+
+        public static List<string> GetArticls()
+        {
+            var client = new JsonServiceClient(ClientConect);
+            var Response = client.Send(new GetArticls { });
+
+            return Response.Result;
+        }
+
         static void Main()
         {
             Console.WriteLine("doing");

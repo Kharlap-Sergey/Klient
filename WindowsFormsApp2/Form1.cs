@@ -15,32 +15,37 @@ namespace WindowsFormsApp2
         public Form1()
         {
             InitializeComponent();
-            button1.Text = "Выполнить";
-            button3.Text = "Выполнить";
+            button1.Text = "Лазить по ссылке";
+            button2.Text = "Анализировать тексты";
+            button3.Text = "Поиск";
             button5.Text = "очистить БД";
             button1.Click += Button1_Click;
+            button2.Click += button2_Click;
             button3.Click += Button3_Click;
+            button4.Click += button4_Click;
             button5.Click += button5_Click;
+            button6.Click += button6_Click;
+            button7.Click += button7_Click;
+
+            CheckArticleListButton();
+
             listBox2.MouseClick+= listBox2_SelectedItem;
             textBox1.KeyPress += TextBox1_KeyPress;
         }
 
         private void listBox2_SelectedItem(object sender, EventArgs e)
         {
-            
-            textBox4.Text = listBox2.SelectedItem.ToString();
+            if(listBox2.Items.Count != 0) 
+                textBox4.Text = listBox2.SelectedItem.ToString();
         }
 
         private void Button3_Click(object sender, EventArgs e)
         {
             button3.Text = "Выполнение";
-            //listBox1.Items.Add(textBox1.Text)
             listBox2.Items.Clear();
-            //var button1 = sender as Button;
             button3.Enabled = false;
             try
             {
-                //var boof = OP.FindByWord(textBox3.Text)
                 textBox4.Text = textBox3.Text;
                 if(checkBox3.Checked)
                     foreach (var uri in OP.FindByEntity(textBox3.Text))
@@ -54,7 +59,7 @@ namespace WindowsFormsApp2
             finally
             {
                 button3.Enabled = true;
-                button3.Text = "Выполнено";  
+                button3.Text = "Поиск";  
             }
 
             
@@ -65,37 +70,43 @@ namespace WindowsFormsApp2
             //label1.Text = textBox1.Text;
         }
 
+        private void DisableWorkTextButton()
+        {
+            button1.Enabled = false;
+            button2.Enabled = false;
+        }
+        private void EnableWorkTextButton()
+        {
+            button1.Enabled = true;
+            button2.Enabled = true;
+        }
+
         private void Button1_Click(object sender, EventArgs e)
         {
             button1.Text = "Выполнение";
-            //listBox1.Items.Add(textBox1.Text);
-            //var button1 = sender as Button;
-            button1.Enabled = false;
+            bool AllRight = true;
+            DisableWorkTextButton();
             try
             {
-                if(checkBox1.Checked)
-                    OP.Crawl(textBox1.Text, int.Parse(textBox2.Text));
-                if (checkBox2.Checked)
-                    OP.ExtractEntities();
-                //MessageBox.Show("egwergwerg");
-
+                 OP.Crawl(textBox1.Text, int.Parse(textBox2.Text));
+            }
+            catch
+            {
+                AllRight = false;
             }
             finally
             {
-                button1.Enabled = true;
-                button1.Text = "Выполнено";
+                EnableWorkTextButton();
+                button1.Text = "Лазить по ссылке";
             }
 
-            listBox1.Items.Add("выполненение \"лазанье\" по ссылке "+textBox1.Text);
-            //label1.Text = textBox1.Text;
+            if(AllRight)
+                listBox1.Items.Add("выполнение \"лазанье\" по ссылке "+textBox1.Text);
+            else
+                listBox1.Items.Add("ошибка");
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
         {
 
         }
@@ -113,6 +124,79 @@ namespace WindowsFormsApp2
         private void button5_Click(object sender, EventArgs e)
         {
             OP.DeleteTabels();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            button2.Text = "Выполнение анализа";
+            DisableWorkTextButton();
+            try
+            {
+                OP.ExtractEntities();
+
+            }
+            finally
+            {
+                EnableWorkTextButton();
+                button2.Text = "Анализировать тексты";
+            }
+
+            listBox1.Items.Add("выполнен анализ текстов");
+        }
+
+
+        private void CheckArticleListButton()
+        {
+            if(ArticlsList.Position == 0)
+            {
+                button4.Enabled = false;
+            }
+            else
+            {
+                button4.Enabled = true;
+            }
+
+            if(ArticlsList.Position == ArticlsList.Articls.Count-2 || ArticlsList.Articls.Count == 0)
+            {
+                button7.Enabled = false;
+            }
+            else
+            {
+                button7.Enabled = true;
+            }
+        }
+        private void ShowCurrentArticle()
+        {
+            listBox3.Items.Clear();
+            textBox5.Text = ArticlsList.Articls[ArticlsList.Position];
+            listBox3.Items.Add(ArticlsList.Articls[ArticlsList.Position]);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //previos
+            ArticlsList.Position--;
+            CheckArticleListButton();
+            ShowCurrentArticle();
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            //update
+            ArticlsList.Update();
+            CheckArticleListButton();
+            if (ArticlsList.Articls.Count != 0)
+            {
+                ShowCurrentArticle();
+            } 
+        }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+            //next
+            ArticlsList.Position++;
+            CheckArticleListButton();
+            ShowCurrentArticle();
         }
     }
 }
