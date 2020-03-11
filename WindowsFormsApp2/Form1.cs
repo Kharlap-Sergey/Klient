@@ -19,6 +19,7 @@ namespace WindowsFormsApp2
             button2.Text = "Анализировать тексты";
             button3.Text = "Поиск";
             button5.Text = "очистить БД";
+            label9.Text = "0/0";
             button1.Click += Button1_Click;
             button2.Click += button2_Click;
             button3.Click += Button3_Click;
@@ -35,8 +36,11 @@ namespace WindowsFormsApp2
 
         private void listBox2_SelectedItem(object sender, EventArgs e)
         {
-            if(listBox2.Items.Count != 0) 
+            if(listBox2.Items.Count != 0)
+            {
                 textBox4.Text = listBox2.SelectedItem.ToString();
+                //linkLabel1.Text = listBox2.SelectedItem.ToString();
+            }
         }
 
         private void Button3_Click(object sender, EventArgs e)
@@ -172,11 +176,15 @@ namespace WindowsFormsApp2
             textBox5.Text = "";
             var pos = ArticlsList.Position;
             var len = ArticlsList.Articls.Count;
-            
+
+            if (len != 0) pos++;
+
+            label9.Text = string.Format("{0}/{1}", pos, len);
+            if (len == 0) return;
             textBox5.Text = ArticlsList.Articls[ArticlsList.Position];
             listBox3.Items.Add(ArticlsList.Articls[ArticlsList.Position]);
         }
-
+        
         private void button4_Click(object sender, EventArgs e)
         {
             //previos
@@ -197,6 +205,7 @@ namespace WindowsFormsApp2
             else
             {
                 textBox5.Text = "";
+                ShowCurrentArticle();
             }
         }
 

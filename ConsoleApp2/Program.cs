@@ -62,6 +62,11 @@ namespace ConsoleApp1
             return Response.Result;
         }
 
+        public static void CreateDataBase()
+        {
+            var client = new JsonServiceClient(ClientConect);
+            var Response = client.Send(new CreateDB { });
+          }
         static void Main()
         {
             Console.WriteLine("doing");
