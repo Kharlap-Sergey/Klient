@@ -15,6 +15,7 @@ namespace ConsoleApp1
             var client = new JsonServiceClient(ClientConect);
             client.SendAsync(new CravlByUri { Uri = uri, DeapValue = amountPages });
 
+            System.Threading.Thread.Sleep(5000);
             while (!client.Send(new IsCrawlCompleted {PagesAmount = amountPages}))
             {
                 System.Threading.Thread.Sleep(5000);
@@ -27,6 +28,7 @@ namespace ConsoleApp1
             var client = new JsonServiceClient(ClientConect);
 
             client.SendAsync(new ExtractEntities { });
+            System.Threading.Thread.Sleep(5000);
             while (!client.Send(new IsExtractEntitiesCompleted {}))
             {
                 System.Threading.Thread.Sleep(5000);

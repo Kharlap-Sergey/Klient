@@ -88,7 +88,8 @@ namespace WindowsFormsApp2
             DisableWorkTextButton();
             try
             {
-                 OP.Crawl(textBox1.Text, int.Parse(textBox2.Text));
+                if(int.Parse(textBox2.Text) > 0)
+                    OP.Crawl(textBox1.Text, int.Parse(textBox2.Text));
             }
             catch
             {
@@ -153,21 +154,25 @@ namespace WindowsFormsApp2
             }
             else
             {
-                button4.Enabled = true;
+                if(!button4.Enabled) button4.Enabled = true;
             }
 
-            if(ArticlsList.Position == ArticlsList.Articls.Count-2 || ArticlsList.Articls.Count == 0)
+            if(ArticlsList.Position == ArticlsList.Articls.Count-1 || ArticlsList.Articls.Count == 0)
             {
                 button7.Enabled = false;
             }
             else
             {
-                button7.Enabled = true;
+                if (!button7.Enabled) button7.Enabled = true;
             }
         }
         private void ShowCurrentArticle()
         {
             listBox3.Items.Clear();
+            textBox5.Text = "";
+            var pos = ArticlsList.Position;
+            var len = ArticlsList.Articls.Count;
+            
             textBox5.Text = ArticlsList.Articls[ArticlsList.Position];
             listBox3.Items.Add(ArticlsList.Articls[ArticlsList.Position]);
         }
@@ -188,7 +193,11 @@ namespace WindowsFormsApp2
             if (ArticlsList.Articls.Count != 0)
             {
                 ShowCurrentArticle();
-            } 
+            }
+            else
+            {
+                textBox5.Text = "";
+            }
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -196,7 +205,8 @@ namespace WindowsFormsApp2
             //next
             ArticlsList.Position++;
             CheckArticleListButton();
-            ShowCurrentArticle();
+            if(button7.Enabled)
+                ShowCurrentArticle();
         }
     }
 }
