@@ -1,5 +1,5 @@
 /* Options:
-Date: 2020-03-13 09:29:42
+Date: 2020-03-13 12:02:15
 Version: 5.80
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://localhost:50357
@@ -52,6 +52,11 @@ namespace OrmLite.ServiceInterface
 
 namespace OrmLite.ServiceModel
 {
+
+    public partial class CrawlCompletedPages
+        : IReturn<int>
+    {
+    }
 
     public partial class CreateDB
         : IReturn<CreateDBResponse>
@@ -134,11 +139,6 @@ namespace OrmLite.ServiceModel
         }
 
         public virtual List<string> Result { get; set; }
-    }
-
-    public partial class IsCrawlCompleted
-        : IReturn<int>
-    {
     }
 
     public partial class IsExtractEntitiesCompleted

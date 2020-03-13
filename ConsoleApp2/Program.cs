@@ -20,7 +20,7 @@ namespace ConsoleApp1
             System.Threading.Thread.Sleep(5000);
             while (true)
             {
-                var currentPagesCompleted = client.Send(new IsCrawlCompleted { });
+                var currentPagesCompleted = client.Send(new CrawlCompletedPages { });
                 if (currentPagesCompleted >= amountPages)
                     break;
                 if(previosPages == currentPagesCompleted)
