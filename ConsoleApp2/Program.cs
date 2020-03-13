@@ -10,16 +10,30 @@ namespace ConsoleApp1
     public class OP
     {
         static string ClientConect = "http://localhost:50357/";
-        public static void Crawl(string uri, int amountPages)
+        public static bool Crawl(string uri, int amountPages)
         {
+            var isSuccess = true; 
             var client = new JsonServiceClient(ClientConect);
+            var previosPages = 0;
             client.SendAsync(new CravlByUri { Uri = uri, DeapValue = amountPages });
 
             System.Threading.Thread.Sleep(5000);
-            while (!client.Send(new IsCrawlCompleted {PagesAmount = amountPages}))
+            while (true)
             {
+                var currentPagesCompleted = client.Send(new IsCrawlCompleted { });
+                if (currentPagesCompleted >= amountPages)
+                    break;
+                if(previosPages == currentPagesCompleted)
+                {
+                    isSuccess = false;
+                    break;
+                }
                 System.Threading.Thread.Sleep(5000);
+
+                previosPages = currentPagesCompleted;
             }
+
+            return isSuccess;
             //client.SendOneWay(new CravlByUri { Uri = uri, DeapValue = 100});
         }
 

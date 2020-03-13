@@ -92,8 +92,11 @@ namespace WindowsFormsApp2
             DisableWorkTextButton();
             try
             {
+                bool result = true;
                 if(int.Parse(textBox2.Text) > 0)
-                    OP.Crawl(textBox1.Text, int.Parse(textBox2.Text));
+                    result = OP.Crawl(textBox1.Text, int.Parse(textBox2.Text));
+
+                if (!result) AllRight = false;
             }
             catch
             {
